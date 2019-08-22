@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: customerdb-migration
+spec:
+  template:
+    metadata: 
+      name: customerdb-migration
+    spec:
+      containers:
+        - name: customerdb-migration
+          image: flyway-customerdb-management
+          imagePullPolicy: Never
+          command: ["flyway", "migrate"]
+          env:
+            - name: DB_USER
+              value: postgres
+            - name: DB_PASSWORD
+              value: postgres
+            - name: DB_URL
+              value: jdbc:postgresql://localhost:5432/customerdb
+          args:
+          - -url=$(DB_URL)
+          - -user=$(DB_USER)
+          - -password=$(DB_PASSWORD)
+      restartPolicy: Never
